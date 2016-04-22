@@ -11,12 +11,13 @@ int main (int argc, char *argv[]) {
     conf.readFile("db.conf");
 
     const libconfig::Setting& root = conf.getRoot();
+    std::string master_ip = root["MASTER_IP"];
     std::string port = root["SLAVE_PORT"];
 
     zmqpp::context context;
     zmqpp::socket requester(context, zmqpp::socket_type::reply);
 
-    requester.connect("tcp://localhost:" + port);
+    requester.connect("tcp://" + master_ip + ":" + port);
 
     std::unordered_map<std::string,std::string> kv_store;
     while(true) {
