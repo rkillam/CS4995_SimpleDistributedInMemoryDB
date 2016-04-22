@@ -17,6 +17,7 @@ int main (int argc, char* argv[]){
 
     requester.connect("tcp://localhost:" + port);
 
+    std::unordered_map<std::string,std::string> kv_store;
     std::string cmd = "";
     while(cmd != "q") {
         std::cout << "q to quit" << std::endl
@@ -51,10 +52,38 @@ int main (int argc, char* argv[]){
 
         if(!msg.msgType == INVALID) {
             zmqpp::message message;
-            message << msg;
 
-            requester.send(message);
-            requester.receive(message);
+            if(std::hash<std::string>()(msg.data["key"]) % 2 == 0) {
+                std::cout << "Going remote" << std::endl;
+                message << msg;
+
+                requester.send(message);
+                requester.receive(message);
+            }
+            else {
+                std::cout << "Staying local" << std::endl;
+
+                if(msg.msgType == MSG_INSERT) {
+                    kv_store[msg.data.at("key")] = msg.data.at("value");
+
+                    msg = Message();
+                    msg.msgType = MSG_OK;
+                    message << msg;
+                }
+                else if(msg.msgType == MSG_LOOKUP) {
+                    Message reply;
+
+                    try {
+                        reply.data["value"] = kv_store.at(msg.data.at("key"));
+                        reply.msgType = MSG_OK;
+                    }
+                    catch(std::out_of_range& e) {
+                        reply.msgType = MSG_KEY_ERROR;
+                    }
+
+                    message << reply;
+                }
+            }
 
             std::string reply;
             message >> reply;

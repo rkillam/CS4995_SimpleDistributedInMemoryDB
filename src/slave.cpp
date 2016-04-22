@@ -27,6 +27,7 @@ int main (int argc, char *argv[]) {
 
         Message message;
         Message::from_zmq_message(in_message, message);
+        std::cout << "Remote" << std::endl;
 
         if(message.msgType == MSG_INSERT) {
             kv_store[message.data.at("key")] = message.data.at("value");
