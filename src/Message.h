@@ -6,10 +6,16 @@
 
 
 enum MessageType {
+    INVALID,
+
     MSG_ACK,
     MSG_NACK,
-    MSG_ENDPOINT,
+
+    MSG_OK,
     MSG_INSERT,
+    MSG_LOOKUP,
+    MSG_KEY_ERROR,
+
     MSG_SHUTDOWN
 };
 

@@ -28,21 +28,28 @@ int main (int argc, char* argv[]){
 
         Message msg;
         if(cmd == "i") {
-            std::cout << "Key > ";
+            msg.msgType = MSG_INSERT;
 
+            std::cout << "Key > ";
             std::string key;
             std::cin >> key;
-
-            msg.msgType = MSG_INSERT;
             msg.data["key"] = key;
+
+            std::cout << "Value > ";
+            std::string value;
+            std::cin >> value;
+            msg.data["value"] = value;
         }
         else if(cmd == "l") {
-            // std::cout << "Key > ";
-            // std::cin >> msg;
+            msg.msgType = MSG_LOOKUP;
+
+            std::cout << "Key > ";
+            std::string key;
+            std::cin >> key;
+            msg.data["key"] = key;
         }
 
-        // FIXME
-        if(true) {
+        if(!msg.msgType == INVALID) {
             zmqpp::message message;
             message << msg;
 
@@ -51,7 +58,7 @@ int main (int argc, char* argv[]){
 
             std::string reply;
             message >> reply;
-            std::cout << "Received reply: " << reply << std::endl;
+            std::cout << "Received reply: " << std::endl << reply << std::endl;
         }
     }
 

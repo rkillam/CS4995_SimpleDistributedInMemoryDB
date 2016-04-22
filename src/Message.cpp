@@ -11,7 +11,7 @@ const char MSG_DELIMITER ='`';
 
 
 Message::Message() {
-    this->msgType = MSG_NACK;
+    this->msgType = INVALID;
     this->data = std::unordered_map<std::string,std::string>();
 }
 
@@ -45,11 +45,6 @@ void Message::from_zmq_message(zmqpp::message& zmq_message, Message& message) {
     for(auto line = lines.begin(); line != lines.end(); ++line) {
         std::vector<std::string> key_pair = split((*line), MSG_DELIMITER);
 
-        for(auto iter2 = key_pair.begin(); iter2 != key_pair.end(); ++iter2) {
-            std::cout << "key_pair: " << (*iter2) << std::endl;
-        }
-
-        std::cout << "Storing key: " << key_pair.at(0) << " with value: " << key_pair.at(1) << std::endl << std::endl;;
         message.data[key_pair.at(0)] = key_pair.at(1);
     }
 }

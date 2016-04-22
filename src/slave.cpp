@@ -1,6 +1,7 @@
 #include <iostream>
 #include <libconfig.h++>
 #include <unistd.h>
+#include <unordered_map>
 #include <zmqpp/zmqpp.hpp>
 
 #include "Message.h"
@@ -17,6 +18,7 @@ int main (int argc, char *argv[]) {
 
     requester.connect("tcp://localhost:" + port);
 
+    std::unordered_map<std::string,std::string> kv_store;
     while(true) {
         zmqpp::message in_message;
         zmqpp::message out_message;
@@ -27,16 +29,28 @@ int main (int argc, char *argv[]) {
         Message::from_zmq_message(in_message, message);
 
         if(message.msgType == MSG_INSERT) {
-            std::cout << "Received request to insert: " << message.data["key"] << std::endl;
+            kv_store[message.data.at("key")] = message.data.at("value");
 
-            // Do some 'work'
-            usleep(123456);
+            message = Message();
+            message.msgType = MSG_OK;
+            out_message << message;
+        }
+        else if(message.msgType == MSG_LOOKUP) {
+            Message reply;
 
-            //  Send reply back to client
-            out_message << "Stored: " + message.data["key"];
+            try {
+                reply.data["value"] = kv_store.at(message.data.at("key"));
+
+                reply.msgType = MSG_OK;
+            }
+            catch(std::out_of_range& e) {
+                reply.msgType = MSG_KEY_ERROR;
+            }
+
+            out_message << reply;
         }
 
+        // Send reply back to client
         requester.send(out_message);
     }
 }
-
