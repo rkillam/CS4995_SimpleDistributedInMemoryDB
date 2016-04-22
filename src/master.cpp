@@ -4,7 +4,6 @@
 #include <zmqpp/zmqpp.hpp>
 
 #include "Message.h"
-#include "utils.h"
 
 int main (int argc, char* argv[]){
     libconfig::Config conf;
@@ -48,7 +47,7 @@ int main (int argc, char* argv[]){
             message << msg;
 
             requester.send(message);
-            receive_entire_message(requester, message);
+            requester.receive(message);
 
             std::string reply;
             message >> reply;

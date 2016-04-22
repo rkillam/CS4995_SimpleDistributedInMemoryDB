@@ -1,8 +1,6 @@
 #include <libconfig.h++>
 #include <zmqpp/zmqpp.hpp>
 
-#include "utils.h"
-
 
 int main (int argc, char *argv[]) {
     //  Prepare our context and sockets
@@ -32,12 +30,12 @@ int main (int argc, char *argv[]) {
         poller.poll();
 
         if(poller.has_input(frontend)) {
-            receive_entire_message(frontend, message);
+            frontend.receive(message);
             backend.send(message);
         }
 
         if(poller.has_input(backend)) {
-            receive_entire_message(backend, message);
+            backend.receive(message);
             frontend.send(message);
         }
     }

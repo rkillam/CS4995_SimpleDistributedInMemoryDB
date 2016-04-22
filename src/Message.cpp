@@ -1,7 +1,13 @@
 #include "Message.h"
 
+#include <iostream>
+#include <sstream>
+#include <string>
 
-const std::string MSG_DELIMITER = "<MESSAGE_DELIMITER>";
+#include "utils.h"
+
+
+const char MSG_DELIMITER ='`';
 
 
 Message::Message() {
@@ -27,11 +33,23 @@ zmqpp::message& operator<<(zmqpp::message &message, const Message& msg) {
     return message;
 }
 
-// zmqpp::message& operator>>(zmqpp::message &message, Message& msg) {
-    // int msgType;
-    // message >> msgType >> msg.data;
-//
-    // msg.msgType = static_cast<MessageType>(msgType);
-//
-    // return message;
-// }
+void Message::from_zmq_message(zmqpp::message& zmq_message, Message& message) {
+    std::string msg;
+    zmq_message >> msg;
+    std::vector<std::string> lines = split(msg, '\n');
+
+    message.msgType = static_cast<MessageType>(std::stoi(lines.at(0)));
+
+    lines.erase(lines.begin());
+
+    for(auto line = lines.begin(); line != lines.end(); ++line) {
+        std::vector<std::string> key_pair = split((*line), MSG_DELIMITER);
+
+        for(auto iter2 = key_pair.begin(); iter2 != key_pair.end(); ++iter2) {
+            std::cout << "key_pair: " << (*iter2) << std::endl;
+        }
+
+        std::cout << "Storing key: " << key_pair.at(0) << " with value: " << key_pair.at(1) << std::endl << std::endl;;
+        message.data[key_pair.at(0)] = key_pair.at(1);
+    }
+}

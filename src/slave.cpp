@@ -4,7 +4,6 @@
 #include <zmqpp/zmqpp.hpp>
 
 #include "Message.h"
-#include "utils.h"
 
 int main (int argc, char *argv[]) {
     libconfig::Config conf;
@@ -20,19 +19,23 @@ int main (int argc, char *argv[]) {
 
     while(true) {
         zmqpp::message in_message;
-        receive_entire_message(requester, in_message);
-
-        std::string request;
-        in_message >> request;
-
-        std::cout << "Received request: " << request << std::endl;
-
-        // Do some 'work'
-        usleep(123456);
-
-        //  Send reply back to client
         zmqpp::message out_message;
-        out_message << "Stored: " + request;
+
+        requester.receive(in_message);
+
+        Message message;
+        Message::from_zmq_message(in_message, message);
+
+        if(message.msgType == MSG_INSERT) {
+            std::cout << "Received request to insert: " << message.data["key"] << std::endl;
+
+            // Do some 'work'
+            usleep(123456);
+
+            //  Send reply back to client
+            out_message << "Stored: " + message.data["key"];
+        }
+
         requester.send(out_message);
     }
 }

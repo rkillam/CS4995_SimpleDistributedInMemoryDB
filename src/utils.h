@@ -1,3 +1,5 @@
-#include <zmqpp/zmqpp.hpp>
+#include <string>
+#include <vector>
 
-void receive_entire_message(zmqpp::socket&, zmqpp::message&);
+std::vector<std::string>& split(const std::string&, char, std::vector<std::string>&);
+std::vector<std::string> split(const std::string&, char);
