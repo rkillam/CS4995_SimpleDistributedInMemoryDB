@@ -1,0 +1,70 @@
+1
+Remote Calls: 44
+Local Calls: 56
+
+real	0m10.481s
+user	0m0.020s
+sys	0m0.016s
+2
+Remote Calls: 44
+Local Calls: 56
+
+real	0m3.394s
+user	0m0.016s
+sys	0m0.012s
+3
+Remote Calls: 44
+Local Calls: 56
+
+real	0m2.855s
+user	0m0.020s
+sys	0m0.016s
+4
+Remote Calls: 44
+Local Calls: 56
+
+real	0m2.017s
+user	0m0.024s
+sys	0m0.016s
+5
+Remote Calls: 44
+Local Calls: 56
+
+real	0m1.662s
+user	0m0.024s
+sys	0m0.008s
+6
+Remote Calls: 44
+Local Calls: 56
+
+real	0m0.536s
+user	0m0.008s
+sys	0m0.020s
+7
+Remote Calls: 44
+Local Calls: 56
+
+real	0m3.238s
+user	0m0.016s
+sys	0m0.016s
+8
+Remote Calls: 44
+Local Calls: 56
+
+real	0m0.426s
+user	0m0.012s
+sys	0m0.008s
+9
+Remote Calls: 44
+Local Calls: 56
+
+real	0m0.409s
+user	0m0.008s
+sys	0m0.012s
+10
+Remote Calls: 44
+Local Calls: 56
+
+real	0m0.862s
+user	0m0.016s
+sys	0m0.008s
